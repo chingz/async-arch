@@ -1,0 +1,45 @@
+{
+    "id": "/task-assigned",
+    "type": "object",
+    "properties": {
+        "eventId": {
+            "type": "string"
+        },
+        "eventName": {
+            "type": "string",
+            "const": "task-assigned"
+        },
+        "eventTime": {
+            "type": "number"
+        },
+        "eventProducer": {
+            "type": "string"
+        },
+        "eventVersion": {
+            "type": "number"
+        },
+        "data": {
+            "type": "object",
+            "properties": {
+                "taskId": {
+                    "type": "string"
+                },
+                "assignee": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "taskId",
+                "assignee"
+            ]
+        }
+    },
+    "required": [
+        "eventId",
+        "eventName",
+        "eventTime",
+        "eventProducer",
+        "eventVersion",
+        "data"
+    ]
+}

@@ -1,4 +1,7 @@
+const uuid = require('uuid')
 const { Kafka } = require('kafkajs');
+
+const SchemaRegistry = require('../../../../../schemaRegistry');
 
 const kafka = new Kafka({
     clientId: 'auth-service',
@@ -8,26 +11,50 @@ const kafka = new Kafka({
 
 const producer = kafka.producer();
 
-const publishUserCreatedOrUpdated = (event, user) => {
-    return producer.send({
-        topic: 'users-stream',
-        messages: [{
-            value: JSON.stringify({ event, user, created_at: Date.now() })
-        }],
-    })
+const publishUserCreatedOrUpdated = (eventName, user) => {
+    const event = {
+        eventId: uuid.v4(),
+        eventName: eventName,
+        eventTime: Date.now(),
+        eventProducer: 'oidc-service',
+        eventVersion: 1,
+        data: {
+            username: user.username,
+            email: user.email,
+            role: user.role,
+        }
+    };
+
+    const schemaValidationResult = SchemaRegistry.validate(event);
+    if (schemaValidationResult.valid) {
+        return producer.send({
+            topic: 'users-stream',
+            messages: [{
+                value: JSON.stringify(event)
+            }],
+        });
+    }
 }
 
 const publishUserDeleted = (user) => {
-    return producer.send({
-        topic: 'users-stream',
-        messages: [{
-            value: JSON.stringify({
-                event: 'user-deleted',
-                username: user.username,
-                created_at: Date.now()
-            })
-        }],
-    })
+    const event = {
+        eventId: uuid.v4(),
+        eventName: 'user-deleted',
+        eventTime: Date.now(),
+        eventProducer: 'oidc-service',
+        eventVersion: 1,
+        data: { username: user.username }
+    };
+
+    const schemaValidationResult = SchemaRegistry.validate(event);
+    if (schemaValidationResult.valid) {
+        return producer.send({
+            topic: 'users-stream',
+            messages: [{
+                value: JSON.stringify(event)
+            }],
+        });
+    }
 }
 
 module.exports = {

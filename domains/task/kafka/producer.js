@@ -1,4 +1,6 @@
+const uuid = require('uuid');
 const { Kafka } = require('kafkajs');
+const SchemaRegistry = require('../../../schemaRegistry');
 
 const kafka = new Kafka({
     clientId: 'accounting-service',
@@ -8,47 +10,57 @@ const kafka = new Kafka({
 
 const producer = kafka.producer();
 
-const publishTaskCreated = (task) => {
-    return producer.send({
-        topic: 'tasks-stream',
-        messages: [{
-            value: JSON.stringify({ event: 'task-created', task, created_at: Date.now() })
-        }],
-    })
-}
-
 const publishTaskCompleted = (taskId, assignee) => {
-    return producer.send({
-        topic: 'tasks-stream',
-        messages: [{
-            value: JSON.stringify({ event: 'task-completed', taskId, assignee, created_at: Date.now() })
-        }],
-    })
+    const event = {
+        eventId: uuid.v4(),
+        eventName: 'task-completed',
+        eventTime: Date.now(),
+        eventProducer: 'task-service',
+        eventVersion: 1,
+        data: {
+            taskId: taskId.toString(),
+            assignee,
+        }
+    };
+
+    const schemaValidationResult = SchemaRegistry.validate(event);
+    if (schemaValidationResult.valid) {
+        return producer.send({
+            topic: 'tasks',
+            messages: [{
+                value: JSON.stringify(event)
+            }],
+        });
+    }
 }
 
 const publishTaskAssigned = (taskId, assignee) => {
-    return producer.send({
-        topic: 'tasks-stream',
-        messages: [{
-            value: JSON.stringify({ event: 'task-assigned', taskId, assignee, created_at: Date.now() })
-        }],
-    })
-}
+    const event = {
+        eventId: uuid.v4(),
+        eventName: 'task-assigned',
+        eventTime: Date.now(),
+        eventProducer: 'task-service',
+        eventVersion: 1,
+        data: {
+            taskId: taskId.toString(),
+            assignee,
+        }
+    };
 
-const publishTaskUnassigned = (taskId, assignee) => {
-    return producer.send({
-        topic: 'tasks-stream',
-        messages: [{
-            value: JSON.stringify({ event: 'task-unassigned', taskId, assignee, created_at: Date.now() })
-        }],
-    })
+    const schemaValidationResult = SchemaRegistry.validate(event);
+    if (schemaValidationResult.valid) {
+        return producer.send({
+            topic: 'tasks',
+            messages: [{
+                value: JSON.stringify(event)
+            }],
+        });
+    }
 }
 
 module.exports = {
     connect: producer.connect,
     disconnect: producer.disconnect,
-    publishTaskCreated,
     publishTaskCompleted,
     publishTaskAssigned,
-    publishTaskUnassigned,
 };

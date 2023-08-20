@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<%- include('_header') %>
+
+    <body>
+        <div class="container">
+            <%- include('_navbar') %>
+            <h3>Current balance: <%= user.balance %></h3>
+            <br/>
+            <h4>The Most Expensive Task</h4>
+            <table class="table table-striped">
+                <tr>
+                    <th>#</th>
+                    <th>Date</th>
+                    <th>Value</th>
+                </tr>
+                <% for(var i=0; i < expensive_task_stats.length; i++) { %>
+                    <tr>
+                        <td>
+                            #<%= i + 1 %>
+                        </td>
+                        <td>
+                            <%= expensive_task_stats[i].date.toLocaleDateString() %>
+                        </td>
+                        <td>
+                            <%= expensive_task_stats[i].value %>
+                        </td>
+                    </tr>
+                <% } %>
+            </table>
+            <h4>Managers Income</h4>
+            <table class="table table-striped">
+                <tr>
+                    <th>#</th>
+                    <th>Date</th>
+                    <th>Value</th>
+                </tr>
+                <% for(var i=0; i < total_income_stats.length; i++) { %>
+                    <tr>
+                        <td>
+                            #<%= i + 1 %>
+                        </td>
+                        <td>
+                            <%= total_income_stats[i].date.toLocaleDateString() %>
+                        </td>
+                        <td>
+                            <%= total_income_stats[i].value %>
+                        </td>
+                    </tr>
+                <% } %>
+            </table>
+        </div>
+    </body>
+
+</html>

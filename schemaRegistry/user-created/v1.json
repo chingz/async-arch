@@ -1,0 +1,55 @@
+{
+    "id": "/account-created",
+    "type": "object",
+    "properties": {
+        "eventId": {
+            "type": "string"
+        },
+        "eventName": {
+            "type": "string",
+            "const": "user-created"
+        },
+        "eventTime": {
+            "type": "number"
+        },
+        "eventProducer": {
+            "type": "string"
+        },
+        "eventVersion": {
+            "type": "number"
+        },
+        "data": {
+            "type": "object",
+            "properties": {
+                "username": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string",
+                    "format": "email"
+                },
+                "role": {
+                    "type": "string",
+                    "enum": [
+                        "admin",
+                        "manager",
+                        "popug"
+                    ]
+                }
+            },
+            "required": [
+                "username",
+                "email",
+                "role"
+            ]
+        }
+    },
+    "required": [
+        "eventId",
+        "eventName",
+        "eventTime",
+        "eventProducer",
+        "eventVersion",
+        "data"
+    ]
+}

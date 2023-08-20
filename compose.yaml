@@ -95,3 +95,23 @@ services:
     depends_on:
       oidc:
         condition: service_healthy
+  accounting:
+    image: node:16
+    container_name: async_arch_accounting_service
+    command: /app/node_modules/.bin/nodemon --watch ./**/*.js
+    working_dir: /app/domains/accounting
+    environment:
+      - PORT=8030
+      - PUBLIC_OIDC_ISSUER=http://oidc:8010
+      - CLIENT_ID=accounting_service
+      - CLIENT_SECRET=:fc|EoE5KPP37V<
+      - MONGODB_URI=mongodb://db:27017/accounting_service
+      - BROKER=kafka:9093
+      - BROKER_LOG_LEVEL=1
+    ports:
+      - "8030:8030"
+    volumes:
+      - .:/app
+    depends_on:
+      oidc:
+        condition: service_healthy

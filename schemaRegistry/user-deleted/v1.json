@@ -1,0 +1,41 @@
+{
+    "id": "/account-deleted",
+    "type": "object",
+    "properties": {
+        "eventId": {
+            "type": "string"
+        },
+        "eventName": {
+            "type": "string",
+            "const": "user-deleted"
+        },
+        "eventTime": {
+            "type": "number"
+        },
+        "eventProducer": {
+            "type": "string"
+        },
+        "eventVersion": {
+            "type": "number"
+        },
+        "data": {
+            "type": "object",
+            "properties": {
+                "username": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "username"
+            ]
+        }
+    },
+    "required": [
+        "eventId",
+        "eventName",
+        "eventTime",
+        "eventProducer",
+        "eventVersion",
+        "data"
+    ]
+}
