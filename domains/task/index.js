@@ -66,7 +66,6 @@ const User = require('./mongodb/user.js');
 
     router.post('/create', ensureAuthenticated(), bodyParser, async (ctx) => {
         const task = await Task.create(ctx.request.body);
-        await kafkaProducer.publishTaskCreated(task);
         await kafkaProducer.publishTaskAssigned(task._id, task.assignee);
         ctx.redirect('/');
     })
@@ -80,7 +79,7 @@ const User = require('./mongodb/user.js');
     router.post('/assign', ensureAuthenticated('admin', 'manager'), bodyParser, async (ctx) => {
         const workers = await User.getWorkers();
         console.log('reassign tasks between', workers)
-        await Task.reassign(workers, kafkaProducer.publishTaskAssigned, kafkaProducer.publishTaskUnassigned);
+        await Task.reassign(workers, kafkaProducer.publishTaskAssigned);
         return ctx.redirect('/');
     })
 
