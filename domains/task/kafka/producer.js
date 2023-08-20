@@ -18,7 +18,7 @@ const publishTaskCompleted = (taskId, assignee) => {
         eventProducer: 'task-service',
         eventVersion: 1,
         data: {
-            taskId,
+            taskId: taskId.toString(),
             assignee,
         }
     };
@@ -42,7 +42,7 @@ const publishTaskAssigned = (taskId, assignee) => {
         eventProducer: 'task-service',
         eventVersion: 1,
         data: {
-            taskId,
+            taskId: taskId.toString(),
             assignee,
         }
     };

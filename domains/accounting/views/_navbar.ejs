@@ -1,0 +1,13 @@
+<div class="header clearfix">
+    <nav>
+        <ul class="nav nav-pills pull-right">
+            <li role="presentation"><a href="/">My Balance</a></li>
+            <% if (['admin', 'manager'].includes(locals.user.role)) { %>
+                <li role="presentation"><a href="/analytics">Analytics</a></li>
+            <% } %>
+            <li role="presentation"><a href="http://localhost:8020">My Tasks</a></li>
+            <li role="presentation" class="active"><a href="/logout">Logout as <%= locals.user.username %></a></li>
+        </ul>
+    </nav>
+    <h3 class="text-muted">Accounting</h3>
+</div>

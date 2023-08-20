@@ -31,7 +31,7 @@ const onUserEventHandler = async ({ message }) => {
 }
 
 module.exports = async () => {
-    const usersStreamConsumer = kafka.consumer({ groupId: 'tasks-users-stream-reader' });
+    const usersStreamConsumer = kafka.consumer({ groupId: 'tasks-users-stream-reader', allowAutoTopicCreation: true });
     await usersStreamConsumer.subscribe({ topic: 'users-stream' });
     await usersStreamConsumer.run({ eachMessage: onUserEventHandler });
 };

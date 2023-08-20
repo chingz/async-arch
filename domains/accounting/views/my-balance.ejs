@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<%- include('_header') %>
+
+    <body>
+        <div class="container">
+            <%- include('_navbar') %>
+            <h3>Current balance: <%= user.balance %></h3>
+            <br/>
+            <h4>Payroll log</h4>
+            <table class="table table-striped">
+                <tr>
+                    <th>#</th>
+                    <th>Date</th>
+                    <th>Amount</th>
+                </tr>
+                <% for(var i=0; i < user.payroll.length; i++) { %>
+                    <tr>
+                        <td>
+                            #<%= i + 1 %>
+                        </td>
+                        <td>
+                            <%= user.payroll[i].date.toLocaleDateString() %>
+                        </td>
+                        <td>
+                            <%= user.payroll[i].amount %>
+                        </td>
+                    </tr>
+                <% } %>
+            </table>
+            <h4>Tasks log</h4>
+            <table class="table table-striped">
+                <tr>
+                    <th>#</th>
+                    <th>Task ID</th>
+                    <th>At</th>
+                    <th>Action</th>
+                    <th>Charge</th>
+                </tr>
+                <% for(var i=0; i < logs.length; i++) { %>
+                    <tr>
+                        <td>
+                            #<%= i + 1 %>
+                        </td>
+                        <td>
+                            <%= logs[i].taskId %>
+                        </td>
+                        <td>
+                            <%= logs[i].created_at.toLocaleString() %>
+                        </td>
+                        <td>
+                            <%= logs[i].action %>
+                        </td>
+                        <td>
+                            <%= logs[i].balanceChange %>
+                        </td>
+                    </tr>
+                <% } %>
+            </table>
+        </div>
+    </body>
+
+</html>
