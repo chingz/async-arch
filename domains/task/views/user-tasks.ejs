@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<%- include('_header') %>
+
+    <body>
+        <div class="container">
+            <%- include('_navbar') %>
+            <% if (tasks.length) { %>
+                <form method="post" action="/complete">
+                    <table class="table table-striped">
+                        <% for(var i=0; i < tasks.length; i++) { %>
+                            <tr>
+                                <td>
+                                    #<%= i + 1 %>
+                                </td>
+                                <td>
+                                    <%= tasks[i].description %>
+                                </td>
+                                <td>
+                                    <%= tasks[i].assignee %>
+                                </td>
+                                <td>
+                                    <button type="submit" name="_id" value="<%= tasks[i]._id %>">Complete</button>
+                                </td>
+                            </tr>
+                        <% } %>
+                    </table>
+                </form>
+            <% } else { %>
+                <h3>Congratulation! No active tasks...</h3>
+                <% if(['admin', 'manager'].includes(user.role)) { %>
+                    <form method="post" action="/assign">
+                        <button class="btn btn-danger" type="submit">Re-assign all active tickets</button>
+                    </form>
+                <% } %>
+            <% } %>
+        </div>
+    </body>
+
+</html>

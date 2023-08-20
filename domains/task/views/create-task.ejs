@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<%- include('_header') %>
+
+    <body>
+        <div class="container">
+            <%- include('_navbar') %>
+                <form id="create-task" method="post">
+                    <legend>Create a new task</legend>
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea class="form-control" rows="3" id="description" name="description"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="assignee">Assign to</label>
+                        <select class="form-control" id="assignee" name="assignee">
+                            <% for(var i=0; i < workers.length; i++) { %>
+                                <option value="<%= workers[i].username %>">
+                                    <%= workers[i].username %>
+                                </option>
+                                <% } %>
+                        </select>
+
+                    </div>
+                    <button type="submit" class="btn btn-default">Submit</button>
+                </form>
+        </div>
+    </body>
+
+</html>
