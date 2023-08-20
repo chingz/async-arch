@@ -1,0 +1,74 @@
+domains:
+    sso:
+        actions:
+        - user registration
+        - user authorization
+        - client registration
+        - open id interactions flow
+        queries:
+        - account profile
+        entities:
+            account:
+            - username(string, unique)
+            - password(string)
+            - email(string, unique)
+            - role[admin, manager, popug]
+            ...open id related (grant, session, access_token, ...etc)
+        events:
+        - account created
+        - account updated
+        - account deleted
+    tasks:
+        actions:
+        - user authorization via sso
+        - user authentication
+        - create task
+        - complete task
+        - re-assign all open tasks
+        queries:
+        - current sso user assigned tasks
+        entities:
+            user:
+            - username(string)
+            - email(string)
+            - role(string)
+            task:
+            - description(string)
+            - status[open, closed]
+            - assignee(user.username)
+        events:
+        - task created
+        - task assigned
+        - task unassigned
+        - task completed
+        consumed events:
+        - account created
+        - account updated
+        - account deleted
+    accounting:
+        actions:
+        - user authentication via sso
+        - user authorization
+        queries:
+        - current sso user balance
+        - user's tasks log
+        - user's payroll log
+        - total managers income
+        - total users with negative balance
+        - the most expensive task by day, week, month
+        entities:
+            user:
+            - balance(number)
+            - username(string)
+            - email(string)
+            - role(string)
+            - payroll[]:
+                - date(date)
+                - amount(number)
+            task_audit:
+            - taskId(string)
+            - assignee(user.username)
+            - action(task_assigned, task_completed)
+            statistics:
+            - name(total_income, the_most_expensive_task)
+            - date(date)
