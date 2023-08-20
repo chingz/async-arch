@@ -75,3 +75,23 @@ services:
       - "8010:8010"
     volumes:
     - .:/app
+  task:
+    image: node:16
+    container_name: async_arch_task_service
+    command: /app/node_modules/.bin/nodemon --watch ./**/*.js
+    working_dir: /app/domains/task
+    environment:
+      - PORT=8020
+      - PUBLIC_OIDC_ISSUER=http://oidc:8010
+      - CLIENT_ID=task_service
+      - CLIENT_SECRET=o7&A86Nv,B<]I.s
+      - MONGODB_URI=mongodb://db:27017/task_service
+      - BROKER=kafka:9093
+      - BROKER_LOG_LEVEL=1
+    ports:
+      - "8020:8020"
+    volumes:
+      - .:/app
+    depends_on:
+      oidc:
+        condition: service_healthy
