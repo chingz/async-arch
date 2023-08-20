@@ -1,0 +1,53 @@
+services:
+  cache:
+    image: redis
+    container_name: async_arch_cache
+    ports:
+    - "6379:6379"
+  db:
+    image: mongo
+    container_name: async_arch_database
+    ports:
+    - "27017:27017"
+    volumes:
+      - ./.db_files:/data/db
+    healthcheck:
+      test: test $$(mongo --quiet --eval "db.serverStatus().ok") -eq 1
+      interval: 10s
+      start_period: 30s
+  kafka:
+    image: bitnami/kafka
+    environment:
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_ADVERTISED_LISTENERS=INTERNAL://kafka:9092,EXTERNAL://kafka:9093
+      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@127.0.0.1:9094
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT
+      - KAFKA_CFG_LISTENERS=INTERNAL://:9092,EXTERNAL://:9093,CONTROLLER://:9094
+      - KAFKA_CFG_NODE_ID=1
+      - KAFKA_CFG_PROCESS_ROLES=broker,controller
+      - KAFKA_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
+      - KAFKA_KRAFT_CLUSTER_ID=N-8Epk7LTfCc-lObC7llXA
+    healthcheck:
+      test: ["CMD", "bash", "-c", "unset", "JMX_PORT", ";", "/opt/bitnami/kafka/bin/kafka-topics.sh", "--bootstrap-server", "127.0.0.1:9002", "--list"]
+      interval: 10s
+      start_period: 10s
+      timeout: 2s
+      retries: 15
+    expose:
+      - 9093
+    ports:
+      - 9093:9093
+      - 9092:9092
+  kafka-ui:
+    image: provectuslabs/kafka-ui:v0.7.0
+    ports:
+      - 9080:8080
+    depends_on:
+      kafka:
+        condition: service_healthy
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092

@@ -1,0 +1,33 @@
+{
+  "name": "async_arch",
+  "version": "1.0.0",
+  "scripts": {},
+  "author": "Chingiz Musayev",
+  "license": "ISC",
+  "dependencies": {
+    "kafkajs": "^2.2.4",
+    "koa": "^2.14.2",
+    "koa-body": "^6.0.1",
+    "koa-ejs": "^4.3.0",
+    "koa-generic-session": "^2.3.1",
+    "koa-mount": "^4.0.0",
+    "koa-passport": "^4.0.0",
+    "koa-redis": "^4.0.1",
+    "koa-router": "^12.0.0",
+    "koa-static": "^5.0.0",
+    "lodash": "^4.17.21",
+    "mongodb": "^4.16.0",
+    "mongoose": "^7.4.3",
+    "nanoid": "^3.3.4",
+    "node-cron": "^3.0.2",
+    "node-fetch": "^2.6.13",
+    "nodemon": "^3.0.1",
+    "oidc-provider": "^7.14.3",
+    "openid-client": "^5.4.3"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "node_modules/*"
+    ]
+  }
+}
